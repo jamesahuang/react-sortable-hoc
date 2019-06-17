@@ -113,6 +113,17 @@ export function getElementMargin(element) {
   };
 }
 
+export function getElementPadding(element) {
+  const style = window.getComputedStyle(element);
+
+  return {
+    bottom: getPixelValue(style.paddingBottom),
+    left: getPixelValue(style.paddingLeft),
+    right: getPixelValue(style.paddingRight),
+    top: getPixelValue(style.paddingTop),
+  };
+}
+
 export function provideDisplayName(prefix, Component) {
   const componentName = Component.displayName || Component.name;
 

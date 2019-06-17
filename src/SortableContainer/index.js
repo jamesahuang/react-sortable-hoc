@@ -26,6 +26,7 @@ import {
   KEYCODE,
   getTargetIndex,
   getScrollAdjustedBoundingClientRect,
+  getElementPadding,
 } from '../utils';
 
 import AutoScroller from '../AutoScroller';
@@ -257,6 +258,20 @@ export default function sortableContainer(
         const containerBoundingRect = this.scrollContainer.getBoundingClientRect();
         const dimensions = getHelperDimensions({collection, index, node});
 
+        var hasVerticalScrollbar =
+          this.scrollContainer.scrollHeight > this.scrollContainer.clientHeight;
+        if (hasVerticalScrollbar) {
+          var scrollbarWidth =
+            this.scrollContainer.offsetWidth - this.scrollContainer.clientWidth;
+          containerBoundingRect.width -= scrollbarWidth;
+        }
+
+        if (this.scrollContainer.firstChild === node.parentElement) {
+          var containerPadding = getElementPadding(node.parentElement);
+          containerBoundingRect.width -=
+            containerPadding.left + containerPadding.right;
+        }
+
         this.node = node;
         this.margin = margin;
         this.width = dimensions.width;
@@ -267,13 +282,9 @@ export default function sortableContainer(
         };
         this.boundingClientRect = node.getBoundingClientRect();
         this.containerBoundingRect = containerBoundingRect;
-        console.log(
-          'jjjjjjjj',
-          this.boundingClientRect,
-          this.containerBoundingRect,
-        );
         this.containerBoundingRect.width -=
-          this.containerBoundingRect.width % this.boundingClientRect.width;
+          this.containerBoundingRect.width %
+          (this.boundingClientRect.width + this.marginOffset.x);
         this.index = index;
         this.newIndex = index;
 
@@ -700,15 +711,6 @@ export default function sortableContainer(
         if (this.axis.x) {
           if (this.axis.y) {
             // Calculations for a grid setup
-            if (i == 3) {
-              console.log(
-                'jjjjjj',
-                sortingOffset,
-                offset,
-                edgeOffset,
-                this.marginOffset,
-              );
-            }
             if (
               mustShiftForward ||
               (index < this.index &&
