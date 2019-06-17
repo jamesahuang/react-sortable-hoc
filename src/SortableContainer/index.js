@@ -267,6 +267,13 @@ export default function sortableContainer(
         };
         this.boundingClientRect = node.getBoundingClientRect();
         this.containerBoundingRect = containerBoundingRect;
+        console.log(
+          'jjjjjjjj',
+          this.boundingClientRect,
+          this.containerBoundingRect,
+        );
+        this.containerBoundingRect.width -=
+          this.containerBoundingRect.width % this.boundingClientRect.width;
         this.index = index;
         this.newIndex = index;
 
@@ -332,11 +339,11 @@ export default function sortableContainer(
             height: containerHeight,
           } = useWindowAsScrollContainer
             ? {
-              top: 0,
-              left: 0,
-              width: this.contentWindow.innerWidth,
-              height: this.contentWindow.innerHeight,
-            }
+                top: 0,
+                left: 0,
+                width: this.contentWindow.innerWidth,
+                height: this.contentWindow.innerHeight,
+              }
             : this.containerBoundingRect;
           const containerBottom = containerTop + containerHeight;
           const containerRight = containerLeft + containerWidth;
@@ -616,7 +623,8 @@ export default function sortableContainer(
       const prevIndex = this.newIndex;
       this.newIndex = null;
 
-      for (let i = 0, len = nodes.length; i < len; i++) {
+      var firstDisabled = nodes[0] && nodes[0].node.sortableInfo.disabled;
+      for (var i = firstDisabled ? 1 : 0, len = nodes.length; i < len; i++) {
         const {node} = nodes[i];
         const {index} = node.sortableInfo;
         const width = node.offsetWidth;
@@ -692,6 +700,15 @@ export default function sortableContainer(
         if (this.axis.x) {
           if (this.axis.y) {
             // Calculations for a grid setup
+            if (i == 3) {
+              console.log(
+                'jjjjjj',
+                sortingOffset,
+                offset,
+                edgeOffset,
+                this.marginOffset,
+              );
+            }
             if (
               mustShiftForward ||
               (index < this.index &&

@@ -80,7 +80,7 @@ const SortableList = SortableContainer(
   ({
     className,
     items,
-    disabledItems = [],
+    disabledItems = [0],
     itemClass,
     isSorting,
     shouldUseDragHandle,
@@ -516,6 +516,8 @@ storiesOf('General | Layout / Grid', module).add('Basic setup', () => {
       <ListWrapper
         component={SortableList}
         axis={'xy'}
+        lockAxis={'xy'}
+        lockToContainerEdges={true}
         items={getItems(10, 110)}
         helperClass={style.stylizedHelper}
         className={classNames(style.list, style.stylizedList, style.grid)}
